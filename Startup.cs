@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.AspNetCore.Rewrite;
 
 namespace automatic_enigma
 {
@@ -43,12 +44,24 @@ namespace automatic_enigma
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
+            var options = new RewriteOptions()
+                            .AddRewrite("rw", "http://localhost:5000/api/notes", true);
+            
+            app.UseRewriter(options);
+
+
             app.UseMvc();
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
+
+          
+            
+
+
+            
         }
     }
 }
